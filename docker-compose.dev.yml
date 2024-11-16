@@ -12,6 +12,7 @@ services:
     environment:
       - NODE_ENV=development
       - POCKETBASE_URL=http://pocketbase:8090
+      - PB_TYPEGEN_URL=http://pocketbase:8090
     depends_on:
       - pocketbase
     env_file:

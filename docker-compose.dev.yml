@@ -33,8 +33,6 @@ services:
     volumes:
       - pocketbase_data:/pb_data
       - pocketbase_public:/pb_public
-      # Comment out hooks volume if not actively using hooks
-      # - ./pocketbase/pb_hooks:/pb_hooks
     environment:
       - TZ=UTC
     restart: unless-stopped
@@ -44,7 +42,6 @@ services:
       timeout: 5s
       retries: 3
       start_period: 15s
-    command: ["--hooksDir", "/pb_hooks"]
 
 volumes:
   pocketbase_data:

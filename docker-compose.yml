@@ -30,8 +30,6 @@ services:
     volumes:
       - pocketbase_data:/pb_data
       - pocketbase_public:/pb_public
-      # Comment out hooks volume if not actively using hooks
-      # - ./pocketbase/pb_hooks:/pb_hooks
     environment:
       - TZ=UTC
     restart: unless-stopped

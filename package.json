@@ -10,8 +10,10 @@
     "typegen": "npx pocketbase-typegen --env",
     "docker": "docker compose -f docker-compose.dev.yml up",
     "docker:typegen": "docker compose -f docker-compose.dev.yml exec nextjs npm run typegen",
+    "docker:down": "docker compose -f docker-compose.dev.yml down ",
     "test": "jest",
-    "test:e2e": "cypress run"
+    "test:e2e": "cypress run",
+    "docker:clean": "docker compose -f docker-compose.dev.yml down -v && docker compose -f docker-compose.dev.yml up"
   },
   "dependencies": {
     "@testing-library/react": "^16.0.1",

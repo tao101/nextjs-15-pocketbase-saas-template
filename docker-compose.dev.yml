@@ -2,7 +2,8 @@ services:
   nextjs:
     image: node:20-alpine
     working_dir: /app
-    command: sh -c "npm install && npm run dev"
+    command: sh -c "npm install --legacy-peer-deps && npm run dev"
+    restart: unless-stopped
     ports:
       - "3000:3000"
     volumes:
@@ -14,9 +15,16 @@ services:
       - POCKETBASE_URL=http://pocketbase:8090
       - PB_TYPEGEN_URL=http://pocketbase:8090
     depends_on:
-      - pocketbase
+      pocketbase:
+        condition: service_healthy
     env_file:
       - .env.development
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
 
   pocketbase:
     image: ghcr.io/muchobien/pocketbase:latest
@@ -25,12 +33,18 @@ services:
     volumes:
       - pocketbase_data:/pb_data
       - pocketbase_public:/pb_public
+      # Comment out hooks volume if not actively using hooks
+      # - ./pocketbase/pb_hooks:/pb_hooks
+    environment:
+      - TZ=UTC
     restart: unless-stopped
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost:8090/api/health || exit 1
-      interval: 5s
+      interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 3
+      start_period: 15s
+    command: ["--hooksDir", "/pb_hooks"]
 
 volumes:
   pocketbase_data:
